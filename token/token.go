@@ -48,14 +48,19 @@ const (
 	RETURN   = "RETURN"
 )
 
-var keywoards = map[string]TokenType{
-	"fn":  FUNCTION,
-	"let": LET,
+var keywords = map[string]TokenType{
+	"fn":     FUNCTION,
+	"let":    LET,
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
+	"return": RETURN,
 }
 
-// LookupIdent check keywoards map and determinate identifier is keywoard or not
+// LookupIdent check keywords map and determinate identifier is keywoard or not
 func LookupIdent(ident string) TokenType {
-	if tok, ok := keywoards[ident]; ok {
+	if tok, ok := keywords[ident]; ok {
 		return tok
 	}
 
