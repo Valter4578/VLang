@@ -6,7 +6,6 @@ import (
 	"github.com/valter4578/vlang/token"
 )
 
-
 type Node interface {
 	TokenLiteral() string
 	String() string
@@ -137,4 +136,21 @@ func (i *Identifier) TokenLiteral() string {
 
 func (i *Identifier) String() string {
 	return i.Value
+}
+
+type IntegerLiteral struct {
+	Token token.Token
+	Value int64
+}
+
+func (il *IntegerLiteral) statementNode() {
+
+}
+
+func (il *IntegerLiteral) TokenLiteral() string {
+	return il.Token.Literal
+}
+
+func (il *IntegerLiteral) String() string {
+	return il.Token.Literal
 }
