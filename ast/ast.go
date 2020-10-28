@@ -6,6 +6,7 @@ import (
 	"github.com/valter4578/vlang/token"
 )
 
+
 type Node interface {
 	TokenLiteral() string
 	String() string
@@ -115,7 +116,7 @@ func (es *ExpressionStatement) statementNode() {
 
 func (es *ExpressionStatement) String() string {
 	if es.Expression != nil {
-		return es.Expression.String() 
+		return es.Expression.String()
 	}
 
 	return ""
