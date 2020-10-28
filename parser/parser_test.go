@@ -7,7 +7,7 @@ import (
 	"github.com/valter4578/vlang/lexer"
 )
 
-func TestLetStatments(t *testing.T) {
+func TestLetStatement(t *testing.T) {
 	input := `
 let x = 5;
 let y = 10;
@@ -22,8 +22,8 @@ let c = 838383;
 		t.Fatalf("Error in ParseProgram(): returned nil")
 	}
 
-	if len(program.Statments) != 3 {
-		t.Fatalf("Error: program.Statments don't containt 3 statements, got:%d", len(program.Statments))
+	if len(program.Statements) != 3 {
+		t.Fatalf("Error: program.Statements don't containt 3 statements, got:%d", len(program.Statements))
 	}
 
 	tests := []struct {
@@ -35,8 +35,8 @@ let c = 838383;
 	}
 
 	for i, tt := range tests {
-		statment := program.Statements[i]
-		if !testLetStatement(t, statment, tt.expectedIdentifier) {
+		statement := program.Statements[i]
+		if !testLetStatement(t, statement, tt.expectedIdentifier) {
 			return
 		}
 	}
@@ -49,19 +49,19 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	}
 
 	// letStatement, ok := s.(*ast.LetStatement)
-	letStatment, ok := s.(*ast.LetStatement)
+	letStatement, ok := s.(*ast.LetStatement)
 	if !ok {
-		t.Errorf("s not *ast.LetStatment. got=%T", s)
+		t.Errorf("s not *ast.LetStatement. got=%T", s)
 		return false
 	}
 
-	if letStatment.Name.Value != name {
-		t.Errorf("letStmt.Name.Value not '%s'. got=%s", name, letStatment.Name.Value)
+	if letStatement.Name.Value != name {
+		t.Errorf("letStmt.Name.Value not '%s'. got=%s", name, letStatement.Name.Value)
 		return false
 	}
 
-	if letStatment.Name.TokenLiteral() != name {
-		t.Errorf("s.Name not '%s'. got=%s", name, letStatment.Name)
+	if letStatement.Name.TokenLiteral() != name {
+		t.Errorf("s.Name not '%s'. got=%s", name, letStatement.Name)
 		return false
 	}
 
