@@ -6,7 +6,7 @@ type Node interface {
 	TokenLiteral() string
 }
 
-type Statement interface {
+type Statment interface {
 	Node
 	statmentNode()
 }
@@ -17,7 +17,7 @@ type Expression interface {
 }
 
 type Program struct {
-	Statements []Statement
+	Statments []Statment
 }
 
 type LetStatement struct {
@@ -26,12 +26,20 @@ type LetStatement struct {
 	Value Expression
 }
 
-func (ls *LetStatement) statementNode() {
+// func (ls *LetStatement) statementNode() {
 
-}
+// }
+
+// func (ls *LetStatement) TokenLiteral() string {
+// 	return ls.Token.Literal
+// }
 
 func (ls *LetStatement) TokenLiteral() string {
 	return ls.Token.Literal
+}
+
+func (ls *LetStatement) statmentNode() {
+
 }
 
 type Identifier struct {
@@ -39,7 +47,7 @@ type Identifier struct {
 	Value string
 }
 
-func (i *Identifier) statementNode() {
+func (i *Identifier) statmentNode() {
 
 }
 
@@ -49,8 +57,8 @@ func (i *Identifier) TokenLiteral() string {
 
 // TokenLiteral returns the literal value of the token it’s associated with Node
 func (p *Program) TokenLiteral() string {
-	if len(p.Statements) > 0 {
-		return p.Statements[0].TokenLiteral()
+	if len(p.Statments) > 0 {
+		return p.Statments[0].TokenLiteral()
 	} else {
 		return ""
 	}
