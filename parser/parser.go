@@ -86,6 +86,9 @@ func New(l *lexer.Lexer) *Parser {
 	parser.registerInfix(token.LT, parser.parseInfixExpression)
 	parser.registerInfix(token.GT, parser.parseInfixExpression)
 
+	// Functions' call expression
+	parser.registerInfix(token.LPAREN, parser.parseCallExpression)
+
 	parser.nextToken()
 	parser.nextToken()
 
@@ -329,6 +332,36 @@ func (p *Parser) parseIdentifier() ast.Expression {
 
 func (p *Parser) parseBoolean() ast.Expression {
 	return &ast.Boolean{Token: p.curToken, Value: p.curTokenIs(token.TRUE)}
+}
+
+func (p *Parser) parseCallExpression(function ast.Expression) ast.Expression {
+	call := &ast.CallExpression{Token: p.curToken, Function: function}
+	call.Arguments = p.parseCallArguments()
+	return call
+}
+
+func (p *Parser) parseCallArguments() []ast.Expression {
+	args := []ast.Expression{}
+
+	if p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+		return nil
+	}
+
+	p.nextToken()
+	args = append(args, p.parseExpression(LOWEST))
+
+	for p.peekTokenIs(token.COMMA) {
+		p.nextToken()
+		p.nextToken()
+		args = append(args, p.parseExpression(LOWEST))
+	}
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	return args
 }
 
 func (p *Parser) parseIfExpression() ast.Expression {
