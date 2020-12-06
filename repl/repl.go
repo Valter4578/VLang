@@ -7,6 +7,7 @@ import (
 
 	"github.com/valter4578/vlang/evaluator"
 	"github.com/valter4578/vlang/lexer"
+	"github.com/valter4578/vlang/object"
 	"github.com/valter4578/vlang/parser"
 )
 
@@ -14,6 +15,7 @@ const char = "@ "
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
+	env := object.NewEnvironment()
 
 	for {
 		fmt.Printf(char)
@@ -32,7 +34,7 @@ func Start(in io.Reader, out io.Writer) {
 			printParserErrors(out, p.Errors())
 			continue
 		}
-		evaluated := evaluator.Eval(program)
+		evaluated := evaluator.Eval(program, env)
 		if evaluated != nil {
 			io.WriteString(out, evaluated.Inspect())
 			io.WriteString(out, "\n")
@@ -46,3 +48,6 @@ func printParserErrors(out io.Writer, errors []string) {
 		io.WriteString(out, "\t"+msg+"\n")
 	}
 }
+
+
+// if (x < 5 + 5) { true }
