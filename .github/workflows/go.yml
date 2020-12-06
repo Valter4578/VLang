@@ -31,4 +31,4 @@ jobs:
         fi
 
     - name: Test
-      run: go test ./lexer
+      run: go test ./lexer ./evaluator ./parser ./ast
