@@ -637,6 +637,10 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		expected string
 	}{
 		{
+			"-a * b",
+			"((-a) * b)",
+		},
+		{
 			"!-a",
 			"(!(-a))",
 		},
@@ -665,12 +669,20 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 			"(((a + (b * c)) + (d / e)) - f)",
 		},
 		{
+			"3 + 4; -5 * 5",
+			"(3 + 4)((-5) * 5)",
+		},
+		{
 			"5 > 4 == 3 < 4",
 			"((5 > 4) == (3 < 4))",
 		},
 		{
 			"5 < 4 != 3 > 4",
 			"((5 < 4) != (3 > 4))",
+		},
+		{
+			"3 + 4 * 5 == 3 * 1 + 4 * 5",
+			"((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))",
 		},
 		{
 			"true",
