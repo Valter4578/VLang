@@ -183,6 +183,25 @@ func TestIntegerLiteralExpression(t *testing.T) {
 	}
 }
 
+func TestStringLiteralExpression(t *testing.T) {
+	input := `"valter is god damg good";`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	stmt := program.Statements[0].(*ast.ExpressionStatement)
+	literal, ok := stmt.Expression.(*ast.StringLiteral)
+	if !ok {
+		t.Fatalf("exp not *ast.StringLiteral. got=%T", stmt.Expression)
+	}
+
+	if literal.Value != "valter is god damg good" {
+		t.Errorf("literal.Value not %q. got=%q", "valter is god damg good", literal.Value)
+	}
+}
+
 func TestBooleanExpression(t *testing.T) {
 	tests := []struct {
 		input           string
