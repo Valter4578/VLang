@@ -28,8 +28,11 @@ const (
 	FUNCTION_OBJ = "FUNCTION"
 
 	STRING_OBJ = "STRING"
+
+	BUILTFUNC_OBJ = "BUILTINFUNC"
 )
 
+// String
 type String struct {
 	Value string
 }
@@ -42,6 +45,7 @@ func (s *String) Inspect() string {
 	return s.Value
 }
 
+// Integer
 type Integer struct {
 	Value int64
 }
@@ -53,6 +57,7 @@ func (i *Integer) Inspect() string {
 	return fmt.Sprintf("%d", i.Value)
 }
 
+// Boolean
 type Boolean struct {
 	Value bool
 }
@@ -64,6 +69,7 @@ func (b *Boolean) Inspect() string {
 	return fmt.Sprintf("%t", b.Value)
 }
 
+// Null
 type Null struct {
 }
 
@@ -74,6 +80,7 @@ func (n *Null) Inspect() string {
 	return "null"
 }
 
+// ReturnValue
 type ReturnValue struct {
 	Value Object
 }
@@ -85,6 +92,7 @@ func (rv *ReturnValue) Inspect() string {
 	return rv.Value.Inspect()
 }
 
+// Error
 type Error struct {
 	Message string
 }
@@ -96,6 +104,7 @@ func (e *Error) Inspect() string {
 	return "ERROR: " + e.Message
 }
 
+// Functions
 type Function struct {
 	Parameters []*ast.Identifier
 	Body       *ast.BlockStatement
@@ -122,4 +131,20 @@ func (f *Function) Inspect() string {
 	out.WriteString("\n}")
 
 	return out.String()
+}
+
+// BuiltinFunction
+type BuiltinFunc func(args ...Object) Object
+
+// BuiltFunc
+type BuiltFunc struct {
+	Func BuiltinFunc
+}
+
+func (b *BuiltFunc) Type() ObjectType {
+	return BUILTFUNC_OBJ
+}
+
+func (b *BuiltFunc) Inspect() string {
+	return "builtin function"
 }
