@@ -92,12 +92,6 @@ var builtins = map[string]*object.BuiltFunc{
 				return newError("argument to `tail` must be ARRAY, got %s", args[0].Type())
 			}
 
-			//arr := args[0].(*object.Array)
-			//length := len(arr.Elements)
-			//newElements := make([]object.Object, length+1, length+1)
-			//copy(newElements, arr.Elements)
-			//newElements[length] = args[1]
-
 			arr := args[0].(*object.Array)
 			newElement := args[1]
 			arr.Elements = append(arr.Elements, newElement)
