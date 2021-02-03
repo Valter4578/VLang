@@ -48,6 +48,3 @@ func printParserErrors(out io.Writer, errors []string) {
 		io.WriteString(out, "\t"+msg+"\n")
 	}
 }
-
-
-// if (x < 5 + 5) { true }
