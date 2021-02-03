@@ -365,8 +365,11 @@ func unwrapReturnValue(obj object.Object) object.Object {
 }
 
 func evalIndexExpression(left, index object.Object) object.Object {
-	if left.Type() == object.ARRAY_OBJ && index.Type() == object.INTEGER_OBJ {
+	switch {
+	case left.Type() == object.ARRAY_OBJ && index.Type() == object.INTEGER_OBJ:
 		return evalArrayIndexExpression(left, index)
+	case left.Type() == object.HASH_OBJ:
+		return evalHashIndexExpression(left, index)
 	}
 
 	return newError("index operator not supported: %s", left.Type())
@@ -409,4 +412,18 @@ func evalDictionaryLiteral(node *ast.DictionaryLiteral, env *object.Environment)
 	}
 
 	return &object.Hash{Pairs: pairs}
+}
+
+func evalHashIndexExpression(hash, index object.Object) object.Object {
+	hashObject := hash.(*object.Hash)
+	key, ok := index.(object.Hashable)
+	if !ok {
+		return newError("unusable as hash key: %s", index.Type())
+	}
+	pair, ok := hashObject.Pairs[key.HashKey()]
+	if !ok {
+		return NULL
+	}
+
+	return pair.Value
 }
