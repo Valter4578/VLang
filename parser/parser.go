@@ -68,6 +68,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 	p.registerPrefix(token.STRING, p.parseStringLiteral)
 
+	// operators
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
 	p.registerInfix(token.MINUS, p.parseInfixExpression)
@@ -78,9 +79,11 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.LT, p.parseInfixExpression)
 	p.registerInfix(token.GT, p.parseInfixExpression)
 
+	// data structures
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
+	p.registerPrefix(token.LBRACE, p.parseDictionaryLiteral)
 
 	p.nextToken()
 	p.nextToken()
@@ -268,6 +271,37 @@ func (p *Parser) parseExpressionList(endToken token.TokenType) []ast.Expression 
 	}
 
 	return expressions
+}
+
+func (p *Parser) parseDictionaryLiteral() ast.Expression {
+	// create empty dic
+	dictionary := &ast.DictionaryLiteral{Token: p.curToken}
+	dictionary.Value = make(map[ast.Expression]ast.Expression)
+
+	// loop untill token == "}"
+	for !p.peekTokenIs(token.RBRACE) {
+		p.nextToken()
+
+		key := p.parseExpression(LOWEST)
+		if !p.expectPeek(token.COLON) {
+			return nil
+		}
+
+		p.nextToken()
+
+		value := p.parseExpression(LOWEST)
+		dictionary.Value[key] = value
+
+		if !p.peekTokenIs(token.RBRACE) && !p.expectPeek(token.COMMA) {
+			return nil
+		}
+	}
+
+	if !p.expectPeek(token.RBRACE) {
+		return nil
+	}
+
+	return dictionary
 }
 
 func (p *Parser) parseIdentifier() ast.Expression {

@@ -410,3 +410,31 @@ func (al *ArrayLiteral) String() string {
 
 	return out.String()
 }
+
+type DictionaryLiteral struct {
+	Value map[Expression]Expression // {*expression*: *expression*}
+	Token token.Token               // "{" token
+}
+
+func (dl *DictionaryLiteral) expressionNode() {
+
+}
+
+func (dl *DictionaryLiteral) String() string {
+	var out bytes.Buffer
+
+	pairs := []string{}
+	for key, value := range dl.Value {
+		pairs = append(pairs, key.String()+":"+value.String())
+	}
+
+	out.WriteString("{")
+	out.WriteString(strings.Join(pairs, ", "))
+	out.WriteString("}")
+
+	return out.String()
+}
+
+func (dl *DictionaryLiteral) TokenLiteral() string {
+	return dl.Token.Literal
+}
