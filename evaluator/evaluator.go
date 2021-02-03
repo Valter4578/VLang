@@ -101,6 +101,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		}
 		return &object.Array{Elements: elements}
 
+	case *ast.DictionaryLiteral:
+		return evalDictionaryLiteral(node, env)
+
 	case *ast.IndexExpression:
 		left := Eval(node.Left, env)
 		if isError(left) {
@@ -219,9 +222,9 @@ func evalStringInfixExpression(operator string, left, right object.Object) objec
 	}
 
 	leftVal := left.(*object.String).Value
-	righVal := right.(*object.String).Value
+	rightVal := right.(*object.String).Value
 
-	return &object.String{Value: leftVal + righVal}
+	return &object.String{Value: leftVal + rightVal}
 }
 
 func evalIntegerInfixExpression(operator string, left, right object.Object) object.Object {
@@ -380,4 +383,30 @@ func evalArrayIndexExpression(array, index object.Object) object.Object {
 	}
 
 	return arrayObj.Elements[indexValue]
+}
+
+func evalDictionaryLiteral(node *ast.DictionaryLiteral, env *object.Environment) object.Object {
+	pairs := make(map[object.HashKey]object.HashMapPair)
+
+	for keyNode, valueNode := range node.Value {
+		key := Eval(keyNode, env)
+		if isError(key) {
+			return key
+		}
+
+		hashKey, ok := key.(object.Hashable)
+		if !ok {
+			return newError("unusable as hash key: %s", key.Type())
+		}
+
+		value := Eval(valueNode, env)
+		if isError(value) {
+			return value
+		}
+
+		hashed := hashKey.HashKey()
+		pairs[hashed] = object.HashMapPair{Key: key, Value: value}
+	}
+
+	return &object.Hash{Pairs: pairs}
 }
