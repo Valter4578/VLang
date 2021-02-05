@@ -1,6 +1,9 @@
 package evaluator
 
-import "github.com/valter4578/vlang/object"
+import (
+	"fmt"
+	"github.com/valter4578/vlang/object"
+)
 
 var builtins = map[string]*object.BuiltFunc{
 	"len": &object.BuiltFunc{
@@ -97,6 +100,15 @@ var builtins = map[string]*object.BuiltFunc{
 			arr.Elements = append(arr.Elements, newElement)
 
 			return arr
+		},
+	},
+
+	"print": &object.BuiltFunc{
+		Func: func(args ...object.Object) object.Object {
+			for _, argument := range args {
+				fmt.Println(argument.Inspect())
+			}
+			return NULL
 		},
 	},
 }
