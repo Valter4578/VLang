@@ -30,7 +30,6 @@ func Start(in io.Reader, out io.Writer) {
 
 		program := p.ParseProgram()
 		if len(p.Errors()) != 0 {
-			fmt.Println("here ")
 			printParserErrors(out, p.Errors())
 			continue
 		}

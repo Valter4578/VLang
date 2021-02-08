@@ -1,11 +1,20 @@
 package main
 
 import (
-	"os"
-
+	"flag"
 	"github.com/valter4578/vlang/repl"
+	"os"
 )
 
 func main() {
-	repl.Start(os.Stdin, os.Stdout)
+	fileFlag := flag.String("file", "", "Enter file name to evaluate file")
+	flag.Parse()
+
+	if *fileFlag == "" {
+		repl.Start(os.Stdin, os.Stdout)
+	} else {
+		in := parseFile(*fileFlag)
+		evalFile(in)
+	}
+
 }
