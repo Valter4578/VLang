@@ -50,6 +50,7 @@ const (
 	IF       = "IF"
 	ELSE     = "ELSE"
 	RETURN   = "RETURN"
+	FORLOOP  = "FOR"
 )
 
 var keywords = map[string]TokenType{
@@ -60,6 +61,7 @@ var keywords = map[string]TokenType{
 	"if":     IF,
 	"else":   ELSE,
 	"return": RETURN,
+	"for":    FORLOOP,
 }
 
 // LookupIdent check keywords map and determinate identifier is keywoard or not

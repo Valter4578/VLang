@@ -30,6 +30,8 @@ func TestNextToken(t *testing.T) {
 	"test2"
 	[1,2];
 	{"foo": "bar"}
+
+	for let i = 5; i == 20; i = i + 1 { i }
 	`
 	tests := []struct {
 		expectedType    token.TokenType
@@ -122,6 +124,25 @@ func TestNextToken(t *testing.T) {
 		{token.STRING, "bar"},
 		{token.RBRACE, "}"},
 
+		{token.FORLOOP, "for"},
+		{token.LET, "let"},
+		{token.IDENT, "i"},
+		{token.ASSIGN, "="},
+		{token.INT, "5"},
+		{token.SEMICOLON, ";"},
+		{token.IDENT, "i"},
+		{token.EQ, "=="},
+		{token.INT, "20"},
+		{token.SEMICOLON, ";"},
+		{token.IDENT, "i"},
+		{token.ASSIGN, "="},
+		{token.IDENT, "i"},
+		{token.PLUS, "+"},
+		{token.INT, "1"},
+		{token.LBRACE, "{"},
+		{token.IDENT, "i"},
+		{token.RBRACE, "}"},
+
 		{token.EOF, ""},
 	}
 
@@ -130,7 +151,7 @@ func TestNextToken(t *testing.T) {
 	for i, tt := range tests {
 		tok := l.NextToken()
 		if tok.Type != tt.expectedType {
-			t.Fatalf("tests[%d] - tokentype wrong. expected=%q, got=%q", i, tt.expectedType, tok.Type)
+			t.Fatalf("tests[%d] %q - tokentype wrong. expected=%q, got=%q", i, tt.expectedLiteral, tt.expectedType, tok.Type)
 		}
 
 		if tok.Literal != tt.expectedLiteral {
